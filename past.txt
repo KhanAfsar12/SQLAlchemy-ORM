@@ -22,3 +22,13 @@ CRUD OPERATION
 # user = session.query(User).filter_by(id=4).one_or_none()
 # session.delete(user)
 # session.commit()
+
+
+
+# Add random data
+names = ["Ishtiyaque", "Nawaz", "Farman", "sadique"]
+ages = [12,45,32,54,23,76,44,34,9]
+for x in range(20):
+    user = User(name=random.choice(names), age=random.choice(ages))
+    session.add(user)
+session.commit()
