@@ -1,35 +1,32 @@
 from sqlalchemy.orm import sessionmaker
 from models import User, engine
-from sqlalchemy import or_, and_, not_
+from sqlalchemy import or_, and_, not_, func
 
 
 Session = sessionmaker(bind=engine)
 session = Session()
 
-# Use filter() function
-# users_all = session.query(User).all()
-# users_filtered = (
-#     session.query(User).filter(User.age > 40, User.name == 'Nawaz').all()
-#     )
-# print("All users: ",len(users_all))
-# print("users_filtered", len(users_filtered))
+# Grouping
+# users = session.query(User.name, func.count(User.id)).group_by(User.name).all()
+# print(users)
 
 
-# filter_by() function
-# users = session.query(User).filter_by(age = 24).all()
-# for user in users:
-#     print(f"user age: {user.age}")
+# Chaining
+# users_tuple = session.query(User.age, func.count(User.id)).filter(User.age > 26).order_by(User.age).filter(User.age < 55).group_by(User.age).all()
+# for age, count in users_tuple:
+#     print(f"age:{age} ---> count:{count}")
 
+# Conditional chaining
+only_iron_man = True
+group_by_age = True
 
-# where() function
-users = session.query(User).where(
-    or_(
-    not_(User.name=="Ishtiyaque"),
-    and_(
-        User.age > 35,
-        User.age < 60
-    )
-    )
-    ).all()
+users = session.query(User)
+
+if only_iron_man:
+    users = users.filter(User.name == "Farman")
+if group_by_age:
+    users = users.group_by(User.age)
+users = users.all()
+
 for i in users:
-    print(f"User age:{i.age} - {i.name}")
+    print(i.age,"-->", i.name)
