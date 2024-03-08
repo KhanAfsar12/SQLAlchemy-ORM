@@ -1,5 +1,6 @@
 from sqlalchemy.orm import sessionmaker
 from models import User, engine
+from sqlalchemy import or_, and_, not_
 
 
 Session = sessionmaker(bind=engine)
@@ -21,5 +22,14 @@ session = Session()
 
 
 # where() function
-
-users = session.query(User).
+users = session.query(User).where(
+    or_(
+    not_(User.name=="Ishtiyaque"),
+    and_(
+        User.age > 35,
+        User.age < 60
+    )
+    )
+    ).all()
+for i in users:
+    print(f"User age:{i.age} - {i.name}")
